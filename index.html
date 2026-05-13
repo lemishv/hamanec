@@ -1,0 +1,3214 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#ede0c4" id="meta-theme-color">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Гаманець</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Гаманець">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ПАЛІТРА — «СТАРИЙ ПАПІР»
+   Світла: кремовий папір, печаткова сангіна
+   Темна: горіхове дерево, теплий амбер
+   ============================================================ */
+:root {
+  --bg: #ede0c4;
+  --bg-elev: #e3d4b3;
+  --bg-elev-2: #d8c79f;
+  --border: #b8a47a;
+  --line: #c0aa7d;
+  --text: #2a1f14;
+  --text-dim: #6e5a3e;
+  --text-faint: #998560;
+  --accent: #a04515;
+  --accent-soft: rgba(160, 69, 21, 0.10);
+  --accent-strong: rgba(160, 69, 21, 0.20);
+  --big-value: #6b3408;
+  --negative: #8b2c0f;
+  --positive: #5a4818;
+  --noise-opacity: 0.6;
+  --on-accent: #fdf3dc;
+}
+[data-theme="dark"] {
+  --bg: #1c1610;
+  --bg-elev: #261d14;
+  --bg-elev-2: #2f2418;
+  --border: #4a3a26;
+  --line: #3d2f1e;
+  --text: #e8d8b6;
+  --text-dim: #a08b66;
+  --text-faint: #6a583c;
+  --accent: #d4a574;
+  --accent-soft: rgba(212, 165, 116, 0.10);
+  --accent-strong: rgba(212, 165, 116, 0.22);
+  --big-value: #e8c090;
+  --negative: #d27557;
+  --positive: #c4ad6d;
+  --noise-opacity: 0.25;
+  --on-accent: #1c1610;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+button {
+  background: none; border: none; cursor: pointer; color: inherit;
+  font: inherit; -webkit-tap-highlight-color: transparent;
+}
+input, textarea, select {
+  font: inherit; color: inherit; background: none; border: none; outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+input[type="number"] { -moz-appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+}
+
+/* ============================================================
+   ШУМ ПАПЕРУ
+   Світла: множення темної фарби — імітує волокна
+   Темна: екран — додає теплі плями на дереві
+   ============================================================ */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.15  0 0 0 0 0.10  0 0 0 0 0.05  0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 200px 200px;
+  mix-blend-mode: multiply;
+}
+[data-theme="dark"] body::before {
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.6  0 0 0 0 0.5  0 0 0 0 0.35  0 0 0 0.12 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ============================================================
+   APP CONTAINER
+   ============================================================ */
+.app {
+  max-width: 500px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ============================================================
+   ШАПКА
+   ============================================================ */
+.hdr {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: 14px 8px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  gap: 4px;
+}
+.hdr::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  background-image: inherit;
+}
+.hdr-btn {
+  height: 44px;
+  width: 44px;
+  display: grid;
+  place-items: center;
+  color: var(--text-dim);
+  font-size: 24px;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+.hdr-btn:active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.hdr-btn.sym {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+}
+.hdr-title {
+  text-align: center;
+  line-height: 1.2;
+  overflow: hidden;
+  padding: 0 4px;
+}
+.hdr-title-main {
+  font-size: 19px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hdr-title-sub {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-faint);
+  margin-top: 2px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   ОСНОВНИЙ КОНТЕЙНЕР
+   ============================================================ */
+main {
+  flex: 1 1 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============================================================
+   ЗАГОЛОВКИ СЕКЦІЙ
+   ============================================================ */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--text-faint);
+  padding: 22px 20px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.section-edit-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px dashed var(--accent);
+  background: transparent;
+  transition: all 0.15s;
+}
+.section-edit-btn:active { background: var(--accent-soft); }
+.section-edit-btn.active {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-style: solid;
+}
+
+/* ============================================================
+   СПИСОК ЖУРНАЛІВ
+   ============================================================ */
+.j-row {
+  padding: 18px 20px;
+  border-bottom: 1px dashed var(--line);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: baseline;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.j-row:active { background: var(--accent-soft); }
+.j-row.archived .j-row-name { color: var(--text-dim); }
+.j-row-name {
+  font-size: 19px;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--text);
+  grid-column: 1;
+  line-height: 1.2;
+}
+.j-row-currency {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+.j-row-period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  grid-column: 1;
+  margin-top: 4px;
+}
+.j-row-summary {
+  grid-column: 1 / -1;
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+.j-row-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-weight: 500;
+}
+.j-row-amount-of {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.j-row-bar {
+  height: 4px;
+  background: var(--bg-elev-2);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+}
+.j-row-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s ease;
+  border-radius: 1px;
+}
+.j-row-bar-fill.over { background: var(--negative); }
+.j-row-bar-fill.savings { background: var(--positive); }
+.j-row-bar-fill.savings.over { background: var(--accent); }
+.j-row-kind {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-right: 8px;
+}
+.j-row-percent {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   ПОРОЖНІЙ СТАН
+   ============================================================ */
+.empty {
+  padding: 60px 28px;
+  text-align: center;
+}
+.empty-mark {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.empty-title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.empty-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+/* ============================================================
+   ДОДАТИ В КІНЦІ СПИСКУ
+   ============================================================ */
+.add-row {
+  padding: 20px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-bottom: 1px dashed var(--line);
+  transition: background 0.15s;
+}
+.add-row:active { background: var(--accent-soft); }
+.add-row::before { content: '+ '; }
+
+/* Архівні — згорнуто */
+.archive-toggle {
+  width: 100%;
+  padding: 16px 20px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.archive-toggle.open .archive-arrow { transform: rotate(90deg); }
+.archive-arrow {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+/* ============================================================
+   ЕКРАН ЖУРНАЛУ — ПІДСУМОК
+   ============================================================ */
+.summary {
+  padding: 32px 20px 26px;
+  border-bottom: 2px solid var(--line);
+  background: var(--bg-elev);
+  text-align: center;
+  position: relative;
+}
+.summary-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+.summary-value {
+  font-family: 'Fraunces', serif;
+  font-size: 54px;
+  font-weight: 400;
+  color: var(--big-value);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: -1px;
+  font-variation-settings: "opsz" 144;
+  display: inline-block;
+}
+.summary-currency {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 24px;
+  color: var(--accent);
+  margin-left: 4px;
+  vertical-align: top;
+  margin-top: 6px;
+  display: inline-block;
+}
+.summary-of {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 1.5px;
+  margin-top: 12px;
+  text-transform: uppercase;
+}
+.summary-bar {
+  margin: 18px auto 0;
+  max-width: 280px;
+  height: 7px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.summary-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.5s ease;
+  border-radius: 2px;
+}
+.summary-bar-fill.over { background: var(--negative); }
+.summary-bar-fill.savings { background: var(--positive); }
+.summary-bar-fill.savings.over { background: var(--accent); }
+.summary-status.achieved {
+  color: var(--accent);
+  font-weight: 500;
+}
+.summary-status {
+  margin-top: 12px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-dim);
+}
+.summary-status.over {
+  color: var(--negative);
+  font-weight: 500;
+}
+.summary-tempo {
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+.summary-tempo.warn {
+  color: var(--negative);
+}
+.summary-income {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  background: var(--bg-elev-2);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--positive);
+}
+
+/* ============================================================
+   КАТЕГОРІЇ — РОЗБИВКА
+   ============================================================ */
+.cat-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  padding: 14px 20px;
+  gap: 10px;
+  min-height: 56px;
+  box-sizing: border-box;
+  border-bottom: 1px dashed var(--line);
+}
+.cat-row.tappable {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.cat-row.tappable:active { background: var(--accent-soft); }
+.cat-row.tappable:active .cat-plus {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+.cat-name {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text);
+}
+.cat-name.uncategorized { color: var(--text-faint); }
+.cat-dots {
+  border-bottom: 1px dotted var(--line);
+  height: 0;
+  align-self: center;
+  margin-top: 4px;
+}
+.cat-sum {
+  font-family: 'Fraunces', serif;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  font-weight: 500;
+}
+.cat-sum.income { color: var(--positive); }
+.cat-sum.zero { color: var(--text-faint); font-style: italic; font-weight: 400; }
+.cat-plus {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.15s;
+  margin-left: 4px;
+}
+.cat-row.armed {
+  background: rgba(139, 44, 15, 0.10);
+}
+[data-theme="dark"] .cat-row.armed {
+  background: rgba(210, 117, 87, 0.15);
+}
+.cat-row.armed .cat-name {
+  color: var(--negative);
+}
+.cat-row.armed .cat-plus {
+  background: var(--negative);
+  color: var(--on-accent);
+  border-color: var(--negative);
+}
+
+/* Inline-форма нової категорії на головному екрані */
+.new-cat-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-bottom: 1px dashed var(--line);
+  background: var(--accent-soft);
+}
+.new-cat-inline input {
+  flex: 1;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  padding: 8px 12px;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  min-width: 0;
+}
+.new-cat-inline input:focus {
+  border-style: solid;
+  outline: none;
+}
+.new-cat-inline-btn {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.new-cat-inline-btn.ok { color: var(--accent); }
+.new-cat-inline-btn.cancel { color: var(--text-faint); }
+.new-cat-inline-btn:active { background: var(--accent-strong); }
+
+/* ============================================================
+   ЗАПИСИ
+   ============================================================ */
+.tx-group {
+  padding-bottom: 4px;
+}
+.tx-group-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-faint);
+  padding: 16px 20px 4px;
+}
+.tx-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 14px 20px;
+  border-bottom: 1px dashed var(--line);
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tx-row:active { background: var(--accent-soft); }
+.tx-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tx-note {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tx-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  color: var(--text-faint);
+  text-transform: lowercase;
+}
+.tx-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.tx-amount.expense { color: var(--text); }
+.tx-amount.income { color: var(--positive); }
+.tx-amount.income::before { content: '+ '; }
+.tx-amount.deposit { color: var(--positive); }
+.tx-amount.deposit::before { content: '+ '; }
+.tx-amount.withdraw { color: var(--negative); }
+.tx-amount.withdraw::before { content: '− '; }
+
+/* ============================================================
+   ФОРМИ
+   ============================================================ */
+.form {
+  padding: 24px 20px 60px;
+}
+.form-group { margin-bottom: 28px; }
+.form-group:last-of-type { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 10px;
+}
+
+/* Текстовий інпут */
+.text-input {
+  width: 100%;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 19px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+.text-input::placeholder { color: var(--text-faint); font-style: italic; }
+.text-input:focus { border-bottom-color: var(--accent); }
+
+.note-input {
+  width: 100%;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  resize: none;
+  min-height: 44px;
+  line-height: 1.4;
+}
+.note-input:focus { border-bottom-color: var(--accent); }
+.note-input::placeholder { color: var(--text-faint); font-style: italic; }
+
+/* Сума — велике поле */
+.amount-input {
+  display: flex;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+}
+.amount-input:focus-within { border-bottom-color: var(--accent); }
+.amount-input input {
+  flex: 1;
+  font-family: 'Fraunces', serif;
+  font-weight: 400;
+  font-size: 42px;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  font-variation-settings: "opsz" 144;
+  width: 100%;
+  letter-spacing: -0.5px;
+}
+.amount-input input::placeholder { color: var(--text-faint); }
+.amount-input .amount-currency {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 24px;
+  color: var(--accent);
+  margin-left: 12px;
+}
+
+/* Дата */
+.date-input {
+  width: 100%;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 19px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  appearance: none;
+  -webkit-appearance: none;
+}
+.date-input:focus { border-bottom-color: var(--accent); }
+
+/* Toggle */
+.toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--bg-elev);
+}
+.toggle-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 12px;
+  color: var(--text-dim);
+  transition: background 0.15s, color 0.15s;
+}
+.toggle-btn.active {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Чіпси */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.chip {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--bg-elev);
+  transition: all 0.15s;
+}
+.chip:active { background: var(--accent-soft); }
+.chip.active {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+.chip.new {
+  font-family: 'JetBrains Mono', monospace;
+  font-style: normal;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-style: dashed;
+  padding: 9px 14px;
+}
+.chip.new:active { color: var(--accent); border-color: var(--accent); }
+
+/* Інпут нової категорії */
+.chip-edit {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px dashed var(--accent);
+  border-radius: 999px;
+  background: var(--bg-elev);
+  padding: 4px 4px 4px 12px;
+}
+.chip-edit input {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  min-width: 80px;
+  max-width: 160px;
+  background: transparent;
+  color: var(--text);
+}
+.chip-edit-btn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 16px;
+  margin-left: 4px;
+}
+.chip-edit-btn.ok { color: var(--accent); }
+.chip-edit-btn.cancel { color: var(--text-faint); }
+
+/* Кнопки */
+.form-actions {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-elev);
+  color: var(--text);
+  transition: all 0.15s;
+}
+.btn:active { background: var(--accent-soft); }
+.btn-primary {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+.btn-danger {
+  color: var(--negative);
+  border-color: var(--negative);
+  background: transparent;
+}
+.btn-danger.armed {
+  background: var(--negative);
+  color: var(--on-accent);
+}
+
+/* Категорії — редагування */
+.cat-edit-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+  gap: 12px;
+}
+.cat-edit-name {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text);
+}
+.cat-edit-del {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  color: var(--text-faint);
+  font-size: 16px;
+  border-radius: 4px;
+}
+.cat-edit-del.armed {
+  color: var(--on-accent);
+  background: var(--negative);
+}
+.cat-edit-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+}
+.cat-edit-add input {
+  flex: 1;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  background: var(--bg-elev);
+  color: var(--text);
+}
+.cat-edit-add input:focus { border-color: var(--accent); border-style: solid; }
+.cat-edit-add-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.cat-edit-add-btn:disabled {
+  opacity: 0.4;
+  background: var(--bg-elev);
+  color: var(--text-faint);
+  border-color: var(--border);
+}
+
+/* Валюта вибір */
+.currency-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.currency-chip {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  width: 52px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-elev);
+  color: var(--text);
+}
+.currency-chip.active {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+.currency-chip.custom {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-style: dashed;
+  color: var(--text-dim);
+  width: auto;
+  padding: 0 14px;
+  text-transform: uppercase;
+}
+
+/* Inline ввід нестандартної валюти */
+.currency-custom-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  background: var(--bg-elev);
+  padding: 4px 4px 4px 10px;
+  height: 44px;
+}
+.currency-custom-input input {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  width: 60px;
+  background: transparent;
+  color: var(--text);
+  text-align: center;
+}
+.currency-custom-input input:focus { outline: none; }
+.currency-custom-btn {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.currency-custom-btn.ok { color: var(--accent); }
+.currency-custom-btn.cancel { color: var(--text-faint); }
+.currency-custom-btn:active { background: var(--accent-soft); }
+
+/* Помилка */
+.error-text {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--negative);
+  margin-top: 6px;
+  display: none;
+}
+.error-text.show { display: block; }
+
+/* Підказка/хелп */
+.hint {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text-faint);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* Empty middle journal */
+.j-empty {
+  padding: 60px 20px;
+  text-align: center;
+}
+.j-empty-title {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+
+/* Анімація появи екрана */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+main { animation: fadeUp 0.25s ease; }
+
+/* Безпечне місце знизу для тонкої тіні + місце під клавіатуру */
+.bottom-pad {
+  height: calc(40px + var(--kb-offset, 0px));
+  transition: height 0.2s;
+}
+
+/* ============================================================
+   СТАТИСТИКА
+   ============================================================ */
+.curr-picker {
+  display: flex;
+  gap: 6px;
+  padding: 14px 20px 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.curr-picker::-webkit-scrollbar { display: none; }
+.curr-pick {
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  min-width: 52px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-elev);
+  color: var(--text);
+  padding: 0 16px;
+  flex-shrink: 0;
+}
+.curr-pick.active {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+}
+
+.stat-section {
+  padding: 18px 20px;
+  border-bottom: 1px dashed var(--line);
+}
+.stat-section:last-of-type { border-bottom: none; }
+
+.stat-big-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  margin: 6px 0;
+  gap: 12px;
+}
+.stat-big-label {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-dim);
+}
+.stat-big-value {
+  font-family: 'Fraunces', serif;
+  font-size: 24px;
+  font-variant-numeric: tabular-nums;
+  color: var(--big-value);
+  font-variation-settings: "opsz" 96;
+}
+.stat-big-value.savings { color: var(--accent); }
+.stat-big-value.dim { color: var(--text-faint); font-style: italic; font-size: 18px; }
+
+.stat-small-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  margin: 6px 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.stat-journal-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 12px 20px;
+  border-bottom: 1px dashed var(--line);
+  gap: 12px;
+  align-items: baseline;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.stat-journal-row:active { background: var(--accent-soft); }
+.stat-journal-name {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text);
+}
+.stat-journal-name .archived-mark {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+.stat-journal-kind {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-right: 6px;
+}
+.stat-journal-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.stat-journal-amount.savings { color: var(--accent); }
+.stat-journal-amount.over { color: var(--negative); }
+
+.stat-cat-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  padding: 10px 20px;
+  gap: 10px;
+  align-items: center;
+}
+.stat-cat-name {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text);
+}
+.stat-cat-dots {
+  border-bottom: 1px dotted var(--line);
+  height: 0;
+  align-self: end;
+  margin-bottom: 5px;
+}
+.stat-cat-amount {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.stat-empty {
+  padding: 40px 20px;
+  text-align: center;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--text-faint);
+}
+
+/* Блок конвертації */
+.stat-conv-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  padding: 6px 20px;
+  gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  align-items: center;
+}
+.stat-conv-curr {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.stat-conv-dots {
+  border-bottom: 1px dotted var(--line);
+  height: 0;
+  align-self: end;
+  margin-bottom: 4px;
+}
+.stat-conv-noted {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faint);
+  padding: 6px 20px 0;
+  font-style: italic;
+}
+
+/* Налаштування — поля курсів */
+.rate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.rate-row:focus-within { border-bottom-color: var(--accent); }
+.rate-prefix {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-dim);
+}
+.rate-row input {
+  flex: 1;
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  background: transparent;
+  text-align: right;
+}
+.rate-suffix {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--accent);
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Стиль для inputs які виглядають як текст */
+input.flat {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+'use strict';
+
+/* ============================================================
+   КОНСТАНТИ
+   ============================================================ */
+const STORAGE_KEY = 'hamanets_v1';
+const APP_NAME = 'Гаманець';
+const CURRENCIES = ['€', '$', '₴', '£', 'zł'];
+
+/* ============================================================
+   СТАН
+   ============================================================ */
+let state = {
+  journals: [],
+  theme: 'light',
+  settings: {
+    baseCurrency: '€',
+    rates: {} // напр. { '$': 1.08, '₴': 45 } — означає 1€ = 1.08$, 1€ = 45₴
+  },
+  // UI стан (не зберігається)
+  view: 'list',
+  activeJournalId: null,
+  editingJournalId: null,
+  editingTransactionId: null,
+  archiveOpen: false,
+  // Чернетка форми (in-memory під час редагування)
+  draft: null,
+  // Стан кнопок зі взведенням
+  armed: null, // {key, timer}
+  // Inline-додавання категорії на головному екрані журналу
+  creatingCategoryInJournal: false,
+  // Режим редагування категорій (показує × замість + → видаляє)
+  editingCats: false,
+  // ID категорії, яку взвели для видалення
+  armedCategoryId: null,
+  // Inline-введення нестандартної валюти
+  enteringCustomCurrency: false,
+  // Поточна валюта на екрані статистики
+  statsCurrency: null
+};
+
+const scrollMemory = {};
+
+/* ============================================================
+   ХЕЛПЕРИ
+   ============================================================ */
+function uid() {
+  return 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+}
+
+function todayDate() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+function parseLocalDate(iso) {
+  if (!iso) return null;
+  const parts = iso.split('-').map(Number);
+  return { y: parts[0], m: parts[1] - 1, d: parts[2] };
+}
+
+const MONTHS_FULL = ['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+const MONTHS_SHORT = ['січ','лют','бер','кві','тра','чер','лип','сер','вер','жов','лис','гру'];
+
+function formatDateFull(iso) {
+  const p = parseLocalDate(iso);
+  if (!p) return '';
+  return p.d + ' ' + MONTHS_FULL[p.m] + ' ' + p.y;
+}
+
+function formatDateShort(iso) {
+  const p = parseLocalDate(iso);
+  if (!p) return '';
+  return p.d + ' ' + MONTHS_SHORT[p.m];
+}
+
+function formatPeriod(start, end) {
+  if (!start) return '';
+  const s = parseLocalDate(start);
+  if (!end) return 'з ' + s.d + ' ' + MONTHS_FULL[s.m] + ' ' + s.y;
+  const e = parseLocalDate(end);
+  if (s.y === e.y && s.m === e.m) {
+    return s.d + '–' + e.d + ' ' + MONTHS_FULL[s.m] + ' ' + s.y;
+  }
+  if (s.y === e.y) {
+    return s.d + ' ' + MONTHS_SHORT[s.m] + ' – ' + e.d + ' ' + MONTHS_SHORT[e.m] + ' ' + s.y;
+  }
+  return s.d + ' ' + MONTHS_SHORT[s.m] + ' ' + s.y + ' – ' + e.d + ' ' + MONTHS_SHORT[e.m] + ' ' + e.y;
+}
+
+function formatRelativeDate(iso) {
+  if (!iso) return '';
+  const today = todayDate();
+  if (iso === today) return 'сьогодні';
+  const t = new Date(today + 'T00:00:00');
+  const d = new Date(iso + 'T00:00:00');
+  const diff = Math.round((t - d) / 86400000);
+  if (diff === 1) return 'вчора';
+  if (diff === 2) return 'позавчора';
+  if (diff === -1) return 'завтра';
+  return formatDateShort(iso);
+}
+
+function daysBetween(a, b) {
+  const da = new Date(a + 'T00:00:00');
+  const db = new Date(b + 'T00:00:00');
+  return Math.round((db - da) / 86400000);
+}
+
+function formatMoney(n, currency) {
+  const cur = currency || '';
+  const negative = n < 0;
+  const abs = Math.abs(n);
+  const fixed = abs.toFixed(2);
+  const parts = fixed.split('.');
+  const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f');
+  const decPart = parts[1];
+  const showDec = decPart !== '00';
+  const num = showDec ? (intPart + ',' + decPart) : intPart;
+  const sign = negative ? '\u2212' : '';
+  return cur ? (sign + num + '\u00a0' + cur) : (sign + num);
+}
+
+function formatMoneyPlain(n) {
+  const abs = Math.abs(n);
+  const fixed = abs.toFixed(2);
+  const parts = fixed.split('.');
+  const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f');
+  const decPart = parts[1];
+  return decPart !== '00' ? (intPart + ',' + decPart) : intPart;
+}
+
+function vibrate(ms) {
+  if (navigator.vibrate) {
+    try { navigator.vibrate(ms); } catch (e) {}
+  }
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ============================================================
+   ЗБЕРЕЖЕННЯ
+   ============================================================ */
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.journals)) state.journals = parsed.journals;
+      if (parsed.theme === 'dark' || parsed.theme === 'light') state.theme = parsed.theme;
+      if (parsed.settings && typeof parsed.settings === 'object') {
+        if (typeof parsed.settings.baseCurrency === 'string') state.settings.baseCurrency = parsed.settings.baseCurrency;
+        if (parsed.settings.rates && typeof parsed.settings.rates === 'object') state.settings.rates = parsed.settings.rates;
+      }
+    }
+  } catch (e) {
+    console.warn('Не вдалося завантажити стан:', e);
+  }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      version: 1,
+      journals: state.journals,
+      theme: state.theme,
+      settings: state.settings
+    }));
+  } catch (e) {
+    console.warn('Не вдалося зберегти стан:', e);
+  }
+}
+
+/* ============================================================
+   ОПЕРАЦІЇ ЗІ СТАНОМ
+   ============================================================ */
+function getJournal(id) {
+  return state.journals.find(j => j.id === id);
+}
+
+function getCategory(journal, id) {
+  if (!journal || !id) return null;
+  return (journal.categories || []).find(c => c.id === id);
+}
+
+function journalKind(j) {
+  return j && j.kind === 'savings' ? 'savings' : 'expenses';
+}
+
+function isSavings(j) {
+  return journalKind(j) === 'savings';
+}
+
+// Залежно від типу журналу: для витрат — скільки витрачено (expenses-incomes),
+// для накопичень — скільки накопичено (incomes-expenses)
+function displayedTotal(j, stats) {
+  return isSavings(j) ? (stats.incomes - stats.expenses) : (stats.expenses - stats.incomes);
+}
+
+/* ============================================================
+   КРОС-ЖУРНАЛЬНА СТАТИСТИКА
+   ============================================================ */
+function getCurrenciesInUse() {
+  const set = {};
+  for (const j of state.journals) set[j.currency] = true;
+  const arr = Object.keys(set);
+  // Базова валюта завжди в списку, навіть якщо журналів у ній нема
+  if (state.settings.baseCurrency && !set[state.settings.baseCurrency]) {
+    arr.unshift(state.settings.baseCurrency);
+  }
+  // Сортуємо: базова перша, далі за алфавітом
+  arr.sort((a, b) => {
+    const base = state.settings.baseCurrency;
+    if (a === base) return -1;
+    if (b === base) return 1;
+    return a.localeCompare(b);
+  });
+  return arr;
+}
+
+function getStatsForCurrency(curr) {
+  const journals = state.journals.filter(j => j.currency === curr);
+  const expensesJournals = journals.filter(j => !isSavings(j));
+  const savingsJournals = journals.filter(j => isSavings(j));
+  let totalExpenses = 0;
+  let totalSavings = 0;
+  const categoryAgg = {}; // ключ: lowercased name → { name, total }
+  let txCount = 0;
+  for (const j of expensesJournals) {
+    const s = journalStats(j);
+    totalExpenses += displayedTotal(j, s);
+    txCount += (j.transactions || []).length;
+    // Категорії агрегуються по назві (case-insensitive)
+    for (const c of (j.categories || [])) {
+      const data = s.byCategory[c.id];
+      if (!data) continue;
+      const net = data.expense - data.income;
+      if (net <= 0) continue;
+      const key = c.name.trim().toLowerCase();
+      if (!categoryAgg[key]) categoryAgg[key] = { name: c.name, total: 0 };
+      categoryAgg[key].total += net;
+    }
+  }
+  for (const j of savingsJournals) {
+    const s = journalStats(j);
+    totalSavings += displayedTotal(j, s);
+    txCount += (j.transactions || []).length;
+  }
+  const topCats = Object.values(categoryAgg).sort((a, b) => b.total - a.total).slice(0, 5);
+  return {
+    journals,
+    expensesJournals,
+    savingsJournals,
+    totalExpenses,
+    totalSavings,
+    txCount,
+    topCats
+  };
+}
+
+// Конвертація суми з валюти curr у базову. Повертає null якщо курс не заданий.
+function convertToBase(amount, curr) {
+  const base = state.settings.baseCurrency;
+  if (curr === base) return amount;
+  const rate = state.settings.rates[curr];
+  if (!rate || rate <= 0) return null;
+  // rate = скільки curr за 1 base. Тобто amount у curr = amount/rate у base.
+  return amount / rate;
+}
+
+function hasAnyRates() {
+  const rates = state.settings.rates;
+  if (!rates) return false;
+  for (const k in rates) {
+    if (rates[k] && rates[k] > 0) return true;
+  }
+  return false;
+}
+
+function journalStats(j) {
+  let expenses = 0, incomes = 0;
+  const byCategory = {};
+  for (const tx of (j.transactions || [])) {
+    if (tx.type === 'income') {
+      incomes += tx.amount;
+    } else {
+      expenses += tx.amount;
+    }
+    const key = tx.categoryId || '__uncategorized__';
+    if (!byCategory[key]) byCategory[key] = { expense: 0, income: 0 };
+    if (tx.type === 'income') byCategory[key].income += tx.amount;
+    else byCategory[key].expense += tx.amount;
+  }
+  const net = expenses - incomes;
+  return { expenses, incomes, net, byCategory };
+}
+
+/* ============================================================
+   НАВІГАЦІЯ ТА ВИДИ
+   ============================================================ */
+function setView(view, opts) {
+  scrollMemory[state.view] = window.scrollY;
+  state.view = view;
+  if (opts) Object.assign(state, opts);
+  clearArmed();
+  state.creatingCategoryInJournal = false;
+  state.editingCats = false;
+  state.enteringCustomCurrency = false;
+  state.armedCategoryId = null;
+  if (state.armedCategoryTimer) {
+    clearTimeout(state.armedCategoryTimer);
+    state.armedCategoryTimer = null;
+  }
+  render();
+  requestAnimationFrame(() => {
+    const restore = (view === 'journal' && !opts?.freshScroll) ? scrollMemory[view] || 0 : 0;
+    window.scrollTo(0, restore);
+  });
+}
+
+function clearArmed() {
+  if (state.armed && state.armed.timer) {
+    clearTimeout(state.armed.timer);
+  }
+  state.armed = null;
+}
+
+function arm(key, action) {
+  if (state.armed && state.armed.key === key) {
+    clearArmed();
+    action();
+    return true;
+  }
+  clearArmed();
+  state.armed = {
+    key: key,
+    timer: setTimeout(() => {
+      state.armed = null;
+      render();
+    }, 3000)
+  };
+  render();
+  return false;
+}
+
+function isArmed(key) {
+  return state.armed && state.armed.key === key;
+}
+
+/* ============================================================
+   ОПЕРАЦІЇ З ДАНИМИ
+   ============================================================ */
+function createJournal(data) {
+  const j = {
+    id: uid(),
+    kind: data.kind === 'savings' ? 'savings' : 'expenses',
+    name: data.name,
+    currency: data.currency || '€',
+    startDate: data.startDate || todayDate(),
+    endDate: data.endDate || null,
+    budget: data.budget != null ? data.budget : null,
+    archived: false,
+    categories: [],
+    transactions: [],
+    createdAt: new Date().toISOString()
+  };
+  state.journals.unshift(j);
+  saveState();
+  return j;
+}
+
+function updateJournal(id, data) {
+  const j = getJournal(id);
+  if (!j) return;
+  if (data.kind !== undefined) j.kind = data.kind === 'savings' ? 'savings' : 'expenses';
+  if (data.name !== undefined) j.name = data.name;
+  if (data.currency !== undefined) j.currency = data.currency;
+  if (data.startDate !== undefined) j.startDate = data.startDate;
+  if (data.endDate !== undefined) j.endDate = data.endDate;
+  if (data.budget !== undefined) j.budget = data.budget;
+  saveState();
+}
+
+function deleteJournal(id) {
+  state.journals = state.journals.filter(j => j.id !== id);
+  saveState();
+}
+
+function archiveJournal(id, archived) {
+  const j = getJournal(id);
+  if (!j) return;
+  j.archived = archived !== undefined ? archived : !j.archived;
+  saveState();
+}
+
+function addCategory(journalId, name) {
+  const j = getJournal(journalId);
+  if (!j) return null;
+  const trimmed = name.trim();
+  if (!trimmed) return null;
+  // Якщо така вже є — повертаємо її
+  const existing = (j.categories || []).find(c =>
+    c.name.toLowerCase() === trimmed.toLowerCase()
+  );
+  if (existing) return existing;
+  const cat = { id: uid(), name: trimmed };
+  if (!j.categories) j.categories = [];
+  j.categories.push(cat);
+  saveState();
+  return cat;
+}
+
+function deleteCategory(journalId, categoryId) {
+  const j = getJournal(journalId);
+  if (!j) return;
+  j.categories = (j.categories || []).filter(c => c.id !== categoryId);
+  // Транзакції з цією категорією — стають без категорії
+  for (const tx of (j.transactions || [])) {
+    if (tx.categoryId === categoryId) tx.categoryId = null;
+  }
+  saveState();
+}
+
+function addTransaction(journalId, data) {
+  const j = getJournal(journalId);
+  if (!j) return;
+  const tx = {
+    id: uid(),
+    amount: data.amount,
+    type: data.type || 'expense',
+    categoryId: data.categoryId || null,
+    date: data.date || todayDate(),
+    note: (data.note || '').trim() || null,
+    createdAt: new Date().toISOString()
+  };
+  if (!j.transactions) j.transactions = [];
+  j.transactions.push(tx);
+  saveState();
+}
+
+function updateTransaction(journalId, txId, data) {
+  const j = getJournal(journalId);
+  if (!j) return;
+  const tx = (j.transactions || []).find(t => t.id === txId);
+  if (!tx) return;
+  if (data.amount !== undefined) tx.amount = data.amount;
+  if (data.type !== undefined) tx.type = data.type;
+  if (data.categoryId !== undefined) tx.categoryId = data.categoryId;
+  if (data.date !== undefined) tx.date = data.date;
+  if (data.note !== undefined) tx.note = (data.note || '').trim() || null;
+  saveState();
+}
+
+function deleteTransaction(journalId, txId) {
+  const j = getJournal(journalId);
+  if (!j) return;
+  j.transactions = (j.transactions || []).filter(t => t.id !== txId);
+  saveState();
+}
+
+/* ============================================================
+   CSV ЕКСПОРТ
+   ============================================================ */
+function exportCSV(journal) {
+  const rows = [];
+  rows.push(['Дата', 'Тип', 'Категорія', 'Сума', 'Валюта', 'Нотатка'].join(';'));
+  const sorted = (journal.transactions || []).slice().sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : (a.createdAt < b.createdAt ? -1 : 1)
+  );
+  for (const tx of sorted) {
+    const cat = getCategory(journal, tx.categoryId);
+    const catName = cat ? cat.name : '';
+    const type = tx.type === 'income' ? 'дохід' : 'витрата';
+    const amount = tx.amount.toFixed(2).replace('.', ',');
+    const note = (tx.note || '').replace(/;/g, ',').replace(/[\r\n]+/g, ' ');
+    rows.push([tx.date, type, catName, amount, journal.currency, note].join(';'));
+  }
+  // BOM для Excel
+  const csv = '\ufeff' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = journal.name.replace(/[^a-zA-Zа-яА-ЯёЁіІїЇєЄґҐ0-9\-_ ]/g, '').replace(/\s+/g, '_').slice(0, 40);
+  a.href = url;
+  a.download = (safeName || 'журнал') + '_' + todayDate() + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ============================================================
+   ТЕМА
+   ============================================================ */
+function toggleTheme() {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  saveState();
+  applyTheme();
+  vibrate(8);
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', state.theme);
+  const meta = document.getElementById('meta-theme-color');
+  if (meta) meta.setAttribute('content', state.theme === 'dark' ? '#1c1610' : '#ede0c4');
+}
+
+/* ============================================================
+   РЕНДЕР: ОСНОВНИЙ
+   ============================================================ */
+function render() {
+  applyTheme();
+  const app = document.getElementById('app');
+  switch (state.view) {
+    case 'list': app.innerHTML = viewList(); break;
+    case 'journal': app.innerHTML = viewJournal(); break;
+    case 'journalForm': app.innerHTML = viewJournalForm(); break;
+    case 'transactionForm': app.innerHTML = viewTransactionForm(); break;
+    case 'stats': app.innerHTML = viewStats(); break;
+    case 'settings': app.innerHTML = viewSettings(); break;
+    default: app.innerHTML = viewList();
+  }
+}
+
+/* ============================================================
+   ВИГЛЯД: СПИСОК ЖУРНАЛІВ
+   ============================================================ */
+function viewList() {
+  const active = state.journals.filter(j => !j.archived);
+  const archived = state.journals.filter(j => j.archived);
+
+  const themeSymbol = state.theme === 'dark' ? '☼' : '☾';
+
+  let body = '';
+
+  if (state.journals.length === 0) {
+    body = '<div class="empty">' +
+      '<button class="btn btn-primary" data-action="new-journal">+ Створити журнал</button>' +
+      '</div>';
+  } else {
+    body = '<div>';
+    if (active.length) {
+      body += renderJournalRows(active, false);
+    } else {
+      body += '<div class="j-empty"><div class="j-empty-title">Активних журналів немає</div></div>';
+    }
+    body += '<button class="add-row" data-action="new-journal">Новий журнал</button>';
+
+    if (archived.length) {
+      body += '<button class="archive-toggle ' + (state.archiveOpen ? 'open' : '') + '" data-action="toggle-archive">' +
+        '<span>Архів · ' + archived.length + '</span>' +
+        '<span class="archive-arrow">›</span>' +
+        '</button>';
+      if (state.archiveOpen) {
+        body += renderJournalRows(archived, true);
+      }
+    }
+    body += '</div>';
+  }
+
+  return (
+    '<header class="hdr">' +
+      '<button class="hdr-btn sym" data-action="open-stats" aria-label="статистика">Σ</button>' +
+      '<div class="hdr-title">' +
+        '<div class="hdr-title-main">' + APP_NAME + '</div>' +
+        '<div class="hdr-title-sub">облік витрат</div>' +
+      '</div>' +
+      '<button class="hdr-btn sym" data-action="toggle-theme" aria-label="тема">' + themeSymbol + '</button>' +
+    '</header>' +
+    '<main>' + body + '<div class="bottom-pad"></div></main>'
+  );
+}
+
+function renderJournalRows(list, isArchived) {
+  return list.map(j => {
+    const stats = journalStats(j);
+    const sav = isSavings(j);
+    const total = displayedTotal(j, stats);
+    const budget = j.budget;
+    const cls = isArchived ? 'j-row archived' : 'j-row';
+
+    let summary;
+    if (budget && budget > 0) {
+      const pct = Math.min(100, Math.max(0, (total / budget) * 100));
+      const over = total > budget;
+      let barCls = 'j-row-bar-fill';
+      if (sav) barCls += ' savings';
+      if (over) barCls += ' over';
+      summary = '<div class="j-row-summary">' +
+        '<span class="j-row-amount">' + formatMoneyPlain(total) +
+          ' <span class="j-row-amount-of">/ ' + formatMoneyPlain(budget) + '</span>' +
+        '</span>' +
+        '<div class="j-row-bar"><div class="' + barCls + '" style="width:' + pct + '%"></div></div>' +
+        '<span class="j-row-percent">' + Math.round((total / budget) * 100) + '%</span>' +
+      '</div>';
+    } else {
+      summary = '<div class="j-row-summary">' +
+        '<span class="j-row-amount">' + formatMoneyPlain(total) + '</span>' +
+        '<div></div>' +
+        '<span class="j-row-percent">' + (j.transactions || []).length + ' зап.</span>' +
+      '</div>';
+    }
+
+    const period = j.endDate ? formatPeriod(j.startDate, j.endDate) : 'з ' + formatDateShort(j.startDate);
+    const kindMarker = sav ? '<span class="j-row-kind">банка</span>' : '';
+
+    return '<div class="' + cls + '" data-action="open-journal" data-id="' + j.id + '">' +
+      '<div class="j-row-name">' + escapeHtml(j.name) + '</div>' +
+      '<div class="j-row-currency">' + escapeHtml(j.currency) + '</div>' +
+      '<div class="j-row-period">' + kindMarker + period + '</div>' +
+      summary +
+    '</div>';
+  }).join('');
+}
+
+/* ============================================================
+   ВИГЛЯД: ЖУРНАЛ
+   ============================================================ */
+function viewJournal() {
+  const j = getJournal(state.activeJournalId);
+  if (!j) {
+    setTimeout(() => setView('list'), 0);
+    return '';
+  }
+  const stats = journalStats(j);
+  const txs = (j.transactions || []).slice().sort((a, b) =>
+    a.date < b.date ? 1 : a.date > b.date ? -1 : (a.createdAt < b.createdAt ? 1 : -1)
+  );
+  const sav = isSavings(j);
+  const total = displayedTotal(j, stats);
+
+  // Підсумок
+  let summaryHTML = '<section class="summary">';
+  summaryHTML += '<div class="summary-label">' + (sav ? 'накопичено' : 'витрачено') + '</div>';
+  summaryHTML += '<div>' +
+    '<span class="summary-value">' + formatMoneyPlain(total) + '</span>' +
+    '<span class="summary-currency">' + escapeHtml(j.currency) + '</span>' +
+  '</div>';
+
+  if (j.budget && j.budget > 0) {
+    const pct = Math.min(100, Math.max(0, (total / j.budget) * 100));
+    const over = total > j.budget;
+    const ofLabel = sav ? 'з ' + formatMoneyPlain(j.budget) + '\u00a0' + escapeHtml(j.currency) + ' цілі' :
+                          'з ' + formatMoneyPlain(j.budget) + '\u00a0' + escapeHtml(j.currency);
+    summaryHTML += '<div class="summary-of">' + ofLabel + '</div>';
+    let barCls = 'summary-bar-fill';
+    if (sav) barCls += ' savings';
+    if (over) barCls += ' over';
+    summaryHTML += '<div class="summary-bar"><div class="' + barCls + '" style="width:' + pct + '%"></div></div>';
+
+    if (sav) {
+      if (over) {
+        summaryHTML += '<div class="summary-status achieved">ціль досягнута · понад на ' + formatMoneyPlain(total - j.budget) + '\u00a0' + escapeHtml(j.currency) + '</div>';
+      } else if (total >= j.budget) {
+        summaryHTML += '<div class="summary-status achieved">ціль досягнута</div>';
+      } else {
+        summaryHTML += '<div class="summary-status">залишилось накопичити ' + formatMoneyPlain(j.budget - total) + '\u00a0' + escapeHtml(j.currency) + '</div>';
+      }
+    } else {
+      if (over) {
+        summaryHTML += '<div class="summary-status over">перевищено на ' + formatMoneyPlain(total - j.budget) + '\u00a0' + escapeHtml(j.currency) + '</div>';
+      } else {
+        summaryHTML += '<div class="summary-status">залишилось ' + formatMoneyPlain(j.budget - total) + '\u00a0' + escapeHtml(j.currency) + '</div>';
+      }
+    }
+  }
+
+  // Темп для проєктних / з дедлайном
+  if (j.endDate) {
+    const tempo = computeTempo(j, stats);
+    if (tempo) summaryHTML += '<div class="summary-tempo ' + (tempo.warn ? 'warn' : '') + '">' + tempo.text + '</div>';
+  }
+
+  summaryHTML += '</section>';
+
+  // Розбивка по категоріях — ТІЛЬКИ для журналу витрат
+  let catsHTML = '';
+  if (!sav) {
+    const cats = j.categories || [];
+    const hasUncategorized = !!stats.byCategory['__uncategorized__'];
+    const totalTxs = (j.transactions || []).length;
+    const isEmpty = cats.length === 0 && totalTxs === 0;
+
+    if (isEmpty) {
+      catsHTML += '<div class="empty">';
+      if (state.creatingCategoryInJournal) {
+        catsHTML += '<div class="new-cat-inline" style="max-width:320px;margin:0 auto;border-bottom:none;border-radius:8px;">' +
+          '<input type="text" id="new-cat-row-input" placeholder="назва" maxlength="30" autocomplete="off">' +
+          '<button class="new-cat-inline-btn ok" data-action="confirm-new-category-row" aria-label="додати">✓</button>' +
+          '<button class="new-cat-inline-btn cancel" data-action="cancel-new-category-row" aria-label="скасувати">✕</button>' +
+        '</div>';
+      } else {
+        catsHTML += '<button class="btn btn-primary" data-action="start-new-category-row" style="display:inline-block;">+ Створити категорію</button>';
+      }
+      catsHTML += '</div>';
+    } else {
+      const editBtnLabel = state.editingCats ? 'Готово' : 'Редагувати';
+      const editBtnCls = state.editingCats ? 'section-edit-btn active' : 'section-edit-btn';
+      const editAction = state.editingCats ? 'exit-cat-edit' : 'enter-cat-edit';
+      catsHTML += '<div class="section-label">' +
+        '<span>Категорії</span>' +
+        '<button class="' + editBtnCls + '" data-action="' + editAction + '">' + editBtnLabel + '</button>' +
+      '</div>';
+
+      const catRows = cats.map(c => {
+        const data = stats.byCategory[c.id] || { expense: 0, income: 0 };
+        const net = data.expense - data.income;
+        return { id: c.id, name: c.name, net, isUncat: false };
+      });
+
+      if (hasUncategorized) {
+        const data = stats.byCategory['__uncategorized__'];
+        const net = data.expense - data.income;
+        catRows.push({ id: null, name: 'без категорії', net, isUncat: true });
+      }
+
+      catRows.sort((a, b) => {
+        if (a.net !== b.net) return b.net - a.net;
+        return a.name.localeCompare(b.name, 'uk');
+      });
+
+      for (const r of catRows) {
+        const nameCls = r.isUncat ? 'cat-name uncategorized' : 'cat-name';
+        let sumCls = 'cat-sum';
+        let sumText;
+        if (r.net === 0) {
+          sumCls += ' zero';
+          sumText = '—';
+        } else if (r.net < 0) {
+          sumCls += ' income';
+          sumText = formatMoneyPlain(r.net) + '\u00a0' + escapeHtml(j.currency);
+        } else {
+          sumText = formatMoneyPlain(r.net) + '\u00a0' + escapeHtml(j.currency);
+        }
+
+        if (r.isUncat) {
+          catsHTML += '<div class="cat-row">' +
+            '<span class="' + nameCls + '">' + escapeHtml(r.name) + '</span>' +
+            '<span class="cat-dots"></span>' +
+            '<span class="' + sumCls + '">' + sumText + '</span>' +
+            '<span style="width:28px"></span>' +
+          '</div>';
+        } else if (state.editingCats) {
+          // У режимі редагування: тап = arm-confirm видалення
+          const armedThis = state.armedCategoryId === r.id;
+          const rowCls = armedThis ? 'cat-row tappable armed' : 'cat-row tappable';
+          catsHTML += '<div class="' + rowCls + '" data-action="delete-cat-in-edit" data-id="' + r.id + '">' +
+            '<span class="' + nameCls + '">' + escapeHtml(r.name) + '</span>' +
+            '<span class="cat-dots"></span>' +
+            '<span class="' + sumCls + '">' + sumText + '</span>' +
+            '<span class="cat-plus">' + (armedThis ? '?' : '×') + '</span>' +
+          '</div>';
+        } else {
+          // Звичайний режим: тап = додати запис
+          catsHTML += '<div class="cat-row tappable" data-action="add-tx-in-category" data-id="' + r.id + '">' +
+            '<span class="' + nameCls + '">' + escapeHtml(r.name) + '</span>' +
+            '<span class="cat-dots"></span>' +
+            '<span class="' + sumCls + '">' + sumText + '</span>' +
+            '<span class="cat-plus">+</span>' +
+          '</div>';
+        }
+      }
+
+      if (state.creatingCategoryInJournal) {
+        catsHTML += '<div class="new-cat-inline">' +
+          '<input type="text" id="new-cat-row-input" placeholder="назва категорії" maxlength="30" autocomplete="off">' +
+          '<button class="new-cat-inline-btn ok" data-action="confirm-new-category-row" aria-label="додати">✓</button>' +
+          '<button class="new-cat-inline-btn cancel" data-action="cancel-new-category-row" aria-label="скасувати">✕</button>' +
+        '</div>';
+      } else {
+        catsHTML += '<button class="add-row" data-action="start-new-category-row">Нова категорія</button>';
+      }
+    }
+  }
+
+  // Список транзакцій згрупованих за датою
+  const totalTxs = (j.transactions || []).length;
+  let txHTML = '';
+  if (totalTxs > 0) {
+    txHTML += '<div class="section-label"><span>Записи</span></div>';
+    const groups = {};
+    for (const tx of txs) {
+      if (!groups[tx.date]) groups[tx.date] = [];
+      groups[tx.date].push(tx);
+    }
+    const sortedDates = Object.keys(groups).sort((a, b) => a < b ? 1 : -1);
+    for (const date of sortedDates) {
+      txHTML += '<div class="tx-group">';
+      txHTML += '<div class="tx-group-date">' + formatRelativeDate(date) + (formatRelativeDate(date) === formatDateShort(date) ? '' : ' · ' + formatDateShort(date)) + '</div>';
+      for (const tx of groups[date]) {
+        let line1, line2;
+        if (sav) {
+          // Для накопичень: показуємо нотатку або тип операції
+          const typeLabel = tx.type === 'income' ? 'поповнення' : 'зняття';
+          if (tx.note) {
+            line1 = tx.note;
+            line2 = typeLabel;
+          } else {
+            line1 = typeLabel;
+            line2 = '';
+          }
+        } else {
+          const cat = getCategory(j, tx.categoryId);
+          const catName = cat ? cat.name : (tx.categoryId ? 'видалена' : '');
+          const note = tx.note;
+          if (note && catName) {
+            line1 = note;
+            line2 = catName;
+          } else if (note) {
+            line1 = note;
+            line2 = '';
+          } else if (catName) {
+            line1 = catName;
+            line2 = '';
+          } else {
+            line1 = '—';
+            line2 = '';
+          }
+        }
+        let amountCls = 'tx-amount';
+        if (sav) {
+          // У накопиченнях: поповнення зелене з +, зняття червонувате з −
+          amountCls += tx.type === 'income' ? ' deposit' : ' withdraw';
+        } else {
+          amountCls += tx.type === 'income' ? ' income' : ' expense';
+        }
+        txHTML += '<div class="tx-row" data-action="edit-tx" data-id="' + tx.id + '">' +
+          '<div class="tx-info">' +
+            '<div class="tx-note">' + escapeHtml(line1) + '</div>' +
+            (line2 ? '<div class="tx-cat">' + escapeHtml(line2) + '</div>' : '') +
+          '</div>' +
+          '<div class="' + amountCls + '">' + formatMoneyPlain(tx.amount) + '\u00a0' + escapeHtml(j.currency) + '</div>' +
+        '</div>';
+      }
+      txHTML += '</div>';
+    }
+  } else if (sav) {
+    // Для порожньої банки нічого не показуємо — буде кнопка нижче
+  }
+
+  // Кнопка «Додати запис» — для накопичень (де немає категорій-точок входу)
+  if (sav) {
+    txHTML += '<button class="add-row" data-action="new-tx">' + (totalTxs > 0 ? 'Новий запис' : 'Додати поповнення') + '</button>';
+  }
+
+  // Шапка
+  const periodSub = j.endDate ? formatPeriod(j.startDate, j.endDate) : 'з ' + formatDateShort(j.startDate);
+
+  return (
+    '<header class="hdr">' +
+      '<button class="hdr-btn" data-action="back-list" aria-label="назад">‹</button>' +
+      '<div class="hdr-title">' +
+        '<div class="hdr-title-main">' + escapeHtml(j.name) + '</div>' +
+        '<div class="hdr-title-sub">' + (sav ? 'банка · ' : '') + periodSub + '</div>' +
+      '</div>' +
+      '<button class="hdr-btn sym" data-action="edit-journal" aria-label="налаштування">⚙</button>' +
+    '</header>' +
+    '<main>' + summaryHTML + catsHTML + txHTML + '<div class="bottom-pad"></div></main>'
+  );
+}
+
+function computeTempo(j, stats) {
+  const today = todayDate();
+  const start = j.startDate;
+  const end = j.endDate;
+  if (!start || !end) return null;
+
+  const totalDays = daysBetween(start, end) + 1;
+  if (totalDays <= 0) return null;
+  const sav = isSavings(j);
+
+  // До початку
+  if (today < start) {
+    const daysToStart = daysBetween(today, start);
+    return { text: 'до початку ' + daysToStart + (daysToStart === 1 ? ' день' : ' дн.'), warn: false };
+  }
+  // Після кінця
+  if (today > end) {
+    const daysAfter = daysBetween(end, today);
+    return { text: 'завершено ' + daysAfter + (daysAfter === 1 ? ' день тому' : ' дн. тому'), warn: false };
+  }
+
+  // Під час
+  const daysPassed = daysBetween(start, today) + 1; // включно з сьогодні
+  const total = displayedTotal(j, stats);
+  const dayPace = total / daysPassed;
+  const projection = dayPace * totalDays;
+  let warn = false;
+
+  if (sav) {
+    // Для накопичень: warn якщо при поточному темпі НЕ досягнеш цілі
+    if (j.budget && projection < j.budget && dayPace > 0) warn = true;
+  } else {
+    // Для витрат: warn якщо при поточному темпі ПЕРЕВИЩИШ бюджет
+    if (j.budget && projection > j.budget) warn = true;
+  }
+
+  let text = 'День ' + daysPassed + ' з ' + totalDays + ' · ' + formatMoneyPlain(dayPace) + '/день';
+  if (j.budget) {
+    text += ' · прогноз ' + formatMoneyPlain(projection);
+  }
+  return { text, warn };
+}
+
+/* ============================================================
+   ВИГЛЯД: ФОРМА ЖУРНАЛУ
+   ============================================================ */
+function viewJournalForm() {
+  const isEdit = !!state.editingJournalId;
+  const j = isEdit ? getJournal(state.editingJournalId) : null;
+
+  if (!state.draft) {
+    state.draft = isEdit && j ? {
+      kind: journalKind(j),
+      name: j.name,
+      currency: j.currency,
+      startDate: j.startDate,
+      endDate: j.endDate || '',
+      budget: j.budget != null ? String(j.budget) : ''
+    } : {
+      kind: 'expenses',
+      name: '',
+      currency: '€',
+      startDate: todayDate(),
+      endDate: '',
+      budget: ''
+    };
+  }
+
+  const d = state.draft;
+  const title = isEdit ? 'Редагувати' : (d.kind === 'savings' ? 'Нова банка' : 'Новий журнал');
+  const isSav = d.kind === 'savings';
+
+  // Динамічні labels
+  const budgetLabel = isSav ? 'Ціль накопичення (необов\'язково)' : 'Плановий бюджет (необов\'язково)';
+  const endDateLabel = isSav ? 'Дата мети (необов\'язково)' : 'Дата кінця (необов\'язково)';
+
+  // Валюти
+  const currenciesHTML = CURRENCIES.map(c =>
+    '<button class="currency-chip ' + (d.currency === c ? 'active' : '') + '" data-action="pick-currency" data-currency="' + escapeHtml(c) + '">' + escapeHtml(c) + '</button>'
+  ).join('');
+  const isCustom = CURRENCIES.indexOf(d.currency) === -1;
+
+  // Toggle типу журналу — тільки при створенні (зміна типу для існуючого журналу заплутає дані)
+  let kindToggle = '';
+  if (!isEdit) {
+    kindToggle = '<div class="form-group">' +
+      '<label class="form-label">Тип</label>' +
+      '<div class="toggle">' +
+        '<button class="toggle-btn ' + (d.kind === 'expenses' ? 'active' : '') + '" data-action="pick-kind" data-kind="expenses">Витрати</button>' +
+        '<button class="toggle-btn ' + (d.kind === 'savings' ? 'active' : '') + '" data-action="pick-kind" data-kind="savings">Накопичення</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  let actions = '';
+  if (isEdit && j) {
+    const archiveLabel = j.archived ? 'Повернути з архіву' : 'Архівувати';
+    const delArmed = isArmed('del-journal');
+    const isJSav = isSavings(j);
+    actions = '<div class="form-actions">' +
+      '<button class="btn btn-secondary" data-action="export-csv">Експорт CSV</button>' +
+      '<button class="btn btn-secondary" data-action="toggle-archive-journal">' + archiveLabel + '</button>' +
+      '<button class="btn btn-danger ' + (delArmed ? 'armed' : '') + '" data-action="delete-journal">' +
+        (delArmed ? 'Натисніть ще раз для видалення' : (isJSav ? 'Видалити банку' : 'Видалити журнал')) +
+      '</button>' +
+    '</div>';
+  }
+
+  const namePlaceholder = '';
+
+  return (
+    '<header class="hdr">' +
+      '<button class="hdr-btn" data-action="cancel-journal-form" aria-label="скасувати">✕</button>' +
+      '<div class="hdr-title">' +
+        '<div class="hdr-title-main">' + title + '</div>' +
+      '</div>' +
+      '<button class="hdr-btn sym" data-action="save-journal" aria-label="зберегти">✓</button>' +
+    '</header>' +
+    '<main><div class="form">' +
+      kindToggle +
+
+      '<div class="form-group">' +
+        '<label class="form-label">Назва</label>' +
+        '<input type="text" class="text-input" data-field="name" value="' + escapeHtml(d.name) + '" placeholder="' + namePlaceholder + '" maxlength="80" autocomplete="off">' +
+        '<div class="error-text" id="err-name">Назва не може бути порожньою</div>' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">Валюта</label>' +
+        '<div class="currency-picker">' +
+          currenciesHTML +
+          (state.enteringCustomCurrency ?
+            '<div class="currency-custom-input">' +
+              '<input type="text" id="custom-currency-input" maxlength="4" placeholder="$$$" autocomplete="off">' +
+              '<button class="currency-custom-btn ok" data-action="confirm-custom-currency" aria-label="ок">✓</button>' +
+              '<button class="currency-custom-btn cancel" data-action="cancel-custom-currency" aria-label="скасувати">✕</button>' +
+            '</div>' :
+            (isCustom ?
+              '<button class="currency-chip active custom" data-action="pick-currency" data-currency="' + escapeHtml(d.currency) + '">' + escapeHtml(d.currency) + '</button>' :
+              '<button class="currency-chip custom" data-action="start-custom-currency">інша</button>'
+            )
+          ) +
+        '</div>' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">Дата початку</label>' +
+        '<input type="date" class="date-input" data-field="startDate" value="' + escapeHtml(d.startDate) + '">' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">' + endDateLabel + '</label>' +
+        '<input type="date" class="date-input" data-field="endDate" value="' + escapeHtml(d.endDate) + '">' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">' + budgetLabel + '</label>' +
+        '<div class="amount-input">' +
+          '<input type="text" inputmode="decimal" data-field="budget" value="' + escapeHtml(d.budget) + '" placeholder="—" class="flat">' +
+          '<span class="amount-currency">' + escapeHtml(d.currency) + '</span>' +
+        '</div>' +
+      '</div>' +
+
+      actions +
+    '</div><div class="bottom-pad"></div></main>'
+  );
+}
+
+/* ============================================================
+   ВИГЛЯД: ФОРМА ТРАНЗАКЦІЇ
+   ============================================================ */
+function viewTransactionForm() {
+  const j = getJournal(state.activeJournalId);
+  if (!j) { setTimeout(() => setView('list'), 0); return ''; }
+
+  const sav = isSavings(j);
+  const isEdit = !!state.editingTransactionId;
+  const tx = isEdit ? (j.transactions || []).find(t => t.id === state.editingTransactionId) : null;
+
+  if (!state.draft) {
+    state.draft = isEdit && tx ? {
+      amount: String(tx.amount),
+      type: tx.type,
+      categoryId: tx.categoryId,
+      date: tx.date,
+      note: tx.note || ''
+    } : {
+      amount: '',
+      // За замовч.: у витратах — витрата, у накопиченнях — поповнення (income)
+      type: sav ? 'income' : 'expense',
+      categoryId: null,
+      date: todayDate(),
+      note: ''
+    };
+  }
+
+  const d = state.draft;
+  const title = isEdit ? 'Редагувати' : (sav ? 'Новий запис' : 'Новий запис');
+
+  // Підзаголовок:
+  // - витрати: назва категорії (вже відомо що це за категорія)
+  // - накопичення: тип операції + назва банки
+  let subtitle;
+  if (sav) {
+    const typeWord = d.type === 'income' ? 'Поповнення' : 'Зняття';
+    subtitle = typeWord + ' · ' + j.name;
+  } else {
+    const currentCat = getCategory(j, d.categoryId);
+    if (currentCat) {
+      subtitle = currentCat.name;
+    } else if (d.categoryId) {
+      subtitle = 'видалена категорія · ' + j.name;
+    } else {
+      subtitle = 'без категорії · ' + j.name;
+    }
+  }
+
+  // Лейбли тогла залежать від типу журналу
+  const expLabel = sav ? 'Поповнення' : 'Витрата';
+  const incLabel = sav ? 'Зняття' : 'Дохід';
+  // Для накопичень: "Поповнення" = income (додає до банки), "Зняття" = expense (віднімає)
+  // Для витрат: "Витрата" = expense, "Дохід" = income
+  // Тобто кнопки місцями не міняються — лише підписи
+  const leftType = sav ? 'income' : 'expense';
+  const rightType = sav ? 'expense' : 'income';
+
+  let deleteBtn = '';
+  if (isEdit) {
+    const delArmed = isArmed('del-tx');
+    deleteBtn = '<div class="form-actions">' +
+      '<button class="btn btn-danger ' + (delArmed ? 'armed' : '') + '" data-action="delete-transaction">' +
+        (delArmed ? 'Натисніть ще раз для видалення' : 'Видалити запис') +
+      '</button>' +
+    '</div>';
+  }
+
+  return (
+    '<header class="hdr">' +
+      '<button class="hdr-btn" data-action="cancel-tx-form" aria-label="скасувати">✕</button>' +
+      '<div class="hdr-title">' +
+        '<div class="hdr-title-main">' + title + '</div>' +
+        '<div class="hdr-title-sub">' + escapeHtml(subtitle) + '</div>' +
+      '</div>' +
+      '<button class="hdr-btn sym" data-action="save-transaction" aria-label="зберегти">✓</button>' +
+    '</header>' +
+    '<main><div class="form">' +
+      '<div class="form-group">' +
+        '<div class="toggle">' +
+          '<button class="toggle-btn ' + (d.type === leftType ? 'active' : '') + '" data-action="pick-type" data-type="' + leftType + '">' + expLabel + '</button>' +
+          '<button class="toggle-btn ' + (d.type === rightType ? 'active' : '') + '" data-action="pick-type" data-type="' + rightType + '">' + incLabel + '</button>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">Сума</label>' +
+        '<div class="amount-input">' +
+          '<input type="text" inputmode="decimal" data-field="amount" value="' + escapeHtml(d.amount) + '" placeholder="0" autofocus class="flat">' +
+          '<span class="amount-currency">' + escapeHtml(j.currency) + '</span>' +
+        '</div>' +
+        '<div class="error-text" id="err-amount">Введіть суму більше нуля</div>' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">Дата</label>' +
+        '<input type="date" class="date-input" data-field="date" value="' + escapeHtml(d.date) + '">' +
+      '</div>' +
+
+      '<div class="form-group">' +
+        '<label class="form-label">Нотатка (необов\'язково)</label>' +
+        '<textarea class="note-input" data-field="note" rows="2">' + escapeHtml(d.note) + '</textarea>' +
+      '</div>' +
+
+      deleteBtn +
+    '</div><div class="bottom-pad"></div></main>'
+  );
+}
+
+/* ============================================================
+   ВИГЛЯД: СТАТИСТИКА
+   ============================================================ */
+function viewStats() {
+  const currencies = getCurrenciesInUse();
+  // Якщо обраної валюти ще немає або її більше нема серед використовуваних — беремо першу
+  if (!state.statsCurrency || currencies.indexOf(state.statsCurrency) === -1) {
+    state.statsCurrency = currencies[0] || state.settings.baseCurrency;
+  }
+  const curr = state.statsCurrency;
+  const s = getStatsForCurrency(curr);
+
+  // Перемикач валют
+  let pickerHTML = '';
+  if (currencies.length > 1) {
+    pickerHTML = '<div class="curr-picker">';
+    for (const c of currencies) {
+      pickerHTML += '<button class="curr-pick ' + (c === curr ? 'active' : '') + '" data-action="pick-stats-curr" data-curr="' + escapeHtml(c) + '">' + escapeHtml(c) + '</button>';
+    }
+    pickerHTML += '</div>';
+  }
+
+  // Блок основних чисел
+  let mainHTML = '';
+  mainHTML += '<div class="stat-section">';
+  mainHTML += '<div class="section-label" style="padding:0 0 12px;border:none">' + escapeHtml(curr) + ' · підсумок</div>';
+
+  mainHTML += '<div class="stat-small-row">' +
+    '<span>Журналів витрат</span>' +
+    '<span>' + s.expensesJournals.length + '</span>' +
+  '</div>';
+  mainHTML += '<div class="stat-small-row">' +
+    '<span>Банок</span>' +
+    '<span>' + s.savingsJournals.length + '</span>' +
+  '</div>';
+  mainHTML += '<div class="stat-small-row">' +
+    '<span>Усього записів</span>' +
+    '<span>' + s.txCount + '</span>' +
+  '</div>';
+
+  mainHTML += '<div class="stat-big-row" style="margin-top:18px">' +
+    '<span class="stat-big-label">витрачено</span>' +
+    '<span class="stat-big-value">' + (s.expensesJournals.length === 0 ? '<span class="dim">—</span>' : formatMoneyPlain(s.totalExpenses) + '\u00a0' + escapeHtml(curr)) + '</span>' +
+  '</div>';
+  mainHTML += '<div class="stat-big-row">' +
+    '<span class="stat-big-label">накопичено</span>' +
+    '<span class="stat-big-value savings">' + (s.savingsJournals.length === 0 ? '<span class="dim">—</span>' : formatMoneyPlain(s.totalSavings) + '\u00a0' + escapeHtml(curr)) + '</span>' +
+  '</div>';
+
+  mainHTML += '</div>';
+
+  // Блок журналів
+  let journalsHTML = '';
+  if (s.journals.length > 0) {
+    journalsHTML += '<div class="section-label"><span>Журнали</span></div>';
+    const sortedJournals = s.journals.slice().sort((a, b) => {
+      if (a.archived !== b.archived) return a.archived ? 1 : -1;
+      return 0;
+    });
+    for (const j of sortedJournals) {
+      const jStats = journalStats(j);
+      const total = displayedTotal(j, jStats);
+      const sav = isSavings(j);
+      const arch = j.archived;
+      let amountCls = 'stat-journal-amount';
+      if (sav) amountCls += ' savings';
+      if (!sav && j.budget && total > j.budget) amountCls += ' over';
+
+      let amountText;
+      if (j.budget && j.budget > 0) {
+        amountText = formatMoneyPlain(total) + ' / ' + formatMoneyPlain(j.budget) + '\u00a0' + escapeHtml(curr);
+      } else {
+        amountText = formatMoneyPlain(total) + '\u00a0' + escapeHtml(curr);
+      }
+
+      journalsHTML += '<div class="stat-journal-row" data-action="open-journal-from-stats" data-id="' + j.id + '">' +
+        '<div class="stat-journal-name">' +
+          (sav ? '<span class="stat-journal-kind">банка</span>' : '') +
+          escapeHtml(j.name) +
+          (arch ? '<span class="archived-mark">архів</span>' : '') +
+        '</div>' +
+        '<div class="' + amountCls + '">' + amountText + '</div>' +
+      '</div>';
+    }
+  } else {
+    journalsHTML += '<div class="section-label"><span>Журнали</span></div>';
+    journalsHTML += '<div class="stat-empty">У цій валюті ще немає журналів</div>';
+  }
+
+  // Блок топ-категорій (тільки якщо є витрати)
+  let topCatsHTML = '';
+  if (s.topCats.length > 0) {
+    topCatsHTML += '<div class="section-label"><span>Топ категорій</span></div>';
+    for (const c of s.topCats) {
+      topCatsHTML += '<div class="stat-cat-row">' +
+        '<span class="stat-cat-name">' + escapeHtml(c.name) + '</span>' +
+        '<span class="stat-cat-dots"></span>' +
+        '<span class="stat-cat-amount">' + formatMoneyPlain(c.total) + '\u00a0' + escapeHtml(curr) + '</span>' +
+      '</div>';
+    }
+  }
+
+  // Блок конвертації — якщо є хоча б один курс
+  let convHTML = '';
+  if (hasAnyRates() && currencies.length > 1) {
+    const base = state.settings.baseCurrency;
+    // Сума по всіх валютах у базовій
+    let convExpensesTotal = 0;
+    let convSavingsTotal = 0;
+    let convExpensesComplete = true;
+    let convSavingsComplete = true;
+    const rowsExp = [];
+    const rowsSav = [];
+
+    for (const c of currencies) {
+      const cs = getStatsForCurrency(c);
+      // Витрати
+      if (cs.expensesJournals.length > 0) {
+        const converted = convertToBase(cs.totalExpenses, c);
+        rowsExp.push({ curr: c, native: cs.totalExpenses, converted });
+        if (converted == null) convExpensesComplete = false;
+        else convExpensesTotal += converted;
+      }
+      // Накопичення
+      if (cs.savingsJournals.length > 0) {
+        const converted = convertToBase(cs.totalSavings, c);
+        rowsSav.push({ curr: c, native: cs.totalSavings, converted });
+        if (converted == null) convSavingsComplete = false;
+        else convSavingsTotal += converted;
+      }
+    }
+
+    convHTML += '<div class="section-label"><span>У перерахунку на ' + escapeHtml(base) + '</span></div>';
+    convHTML += '<div class="stat-section">';
+
+    if (rowsExp.length > 0) {
+      convHTML += '<div class="stat-big-row">' +
+        '<span class="stat-big-label">витрачено</span>' +
+        '<span class="stat-big-value">≈ ' + formatMoneyPlain(convExpensesTotal) + '\u00a0' + escapeHtml(base) + '</span>' +
+      '</div>';
+      for (const r of rowsExp) {
+        const convStr = r.converted == null
+          ? '<span style="color:var(--text-faint)">курс?</span>'
+          : (r.curr === base ? formatMoneyPlain(r.native) + '\u00a0' + escapeHtml(base) : '≈ ' + formatMoneyPlain(r.converted) + '\u00a0' + escapeHtml(base));
+        convHTML += '<div class="stat-conv-row">' +
+          '<span class="stat-conv-curr">' + formatMoneyPlain(r.native) + '\u00a0' + escapeHtml(r.curr) + '</span>' +
+          '<span class="stat-conv-dots"></span>' +
+          '<span>' + convStr + '</span>' +
+        '</div>';
+      }
+    }
+
+    if (rowsSav.length > 0) {
+      convHTML += '<div class="stat-big-row" style="margin-top:18px">' +
+        '<span class="stat-big-label">накопичено</span>' +
+        '<span class="stat-big-value savings">≈ ' + formatMoneyPlain(convSavingsTotal) + '\u00a0' + escapeHtml(base) + '</span>' +
+      '</div>';
+      for (const r of rowsSav) {
+        const convStr = r.converted == null
+          ? '<span style="color:var(--text-faint)">курс?</span>'
+          : (r.curr === base ? formatMoneyPlain(r.native) + '\u00a0' + escapeHtml(base) : '≈ ' + formatMoneyPlain(r.converted) + '\u00a0' + escapeHtml(base));
+        convHTML += '<div class="stat-conv-row">' +
+          '<span class="stat-conv-curr">' + formatMoneyPlain(r.native) + '\u00a0' + escapeHtml(r.curr) + '</span>' +
+          '<span class="stat-conv-dots"></span>' +
+          '<span>' + convStr + '</span>' +
+        '</div>';
+      }
+    }
+
+    if (!convExpensesComplete || !convSavingsComplete) {
+      convHTML += '<div class="stat-conv-noted">не всі курси задані — задайте у налаштуваннях</div>';
+    }
+    convHTML += '</div>';
+  } else if (currencies.length > 1) {
+    // Кілька валют, але курсів немає — невелика підказка
+    convHTML += '<div class="section-label"><span>Конвертація</span></div>';
+    convHTML += '<div class="stat-empty">Щоб бачити загальну картину в ' + escapeHtml(state.settings.baseCurrency) + ', задайте курси у налаштуваннях.</div>';
+  }
+
+  return (
+    '<header class="hdr">' +
+      '<button class="hdr-btn" data-action="back-list" aria-label="назад">‹</button>' +
+      '<div class="hdr-title">' +
+        '<div class="hdr-title-main">Статистика</div>' +
+        '<div class="hdr-title-sub">по всіх журналах</div>' +
+      '</div>' +
+      '<button class="hdr-btn sym" data-action="open-settings" aria-label="налаштування">⚙</button>' +
+    '</header>' +
+    '<main>' + pickerHTML + mainHTML + journalsHTML + topCatsHTML + convHTML + '<div class="bottom-pad"></div></main>'
+  );
+}
+
+/* ============================================================
+   ВИГЛЯД: НАЛАШТУВАННЯ
+   ============================================================ */
+function viewSettings() {
+  if (!state.draft) {
+    state.draft = {
+      baseCurrency: state.settings.baseCurrency || '€',
+      rates: Object.assign({}, state.settings.rates || {})
+    };
+  }
+  const d = state.draft;
+  const base = d.baseCurrency;
+  const currencies = getCurrenciesInUse();
+  // Усі валюти що зустрічаються або базова — крім базової
+  const otherCurrencies = currencies.filter(c => c !== base);
+
+  // Вибір базової
+  const baseChoices = CURRENCIES.slice();
+  if (baseChoices.indexOf(base) === -1) baseChoices.unshift(base);
+  let baseHTML = '<div class="currency-picker">';
+  for (const c of baseChoices) {
+    baseHTML += '<button class="currency-chip ' + (c === base ? 'active' : '') + '" data-action="pick-base-currency" data-curr="' + escapeHtml(c) + '">' + escapeHtml(c) + '</button>';
+  }
+  baseHTML += '</div>';
+
+  // Курси
+  let ratesHTML = '';
+  if (otherCurrencies.length === 0) {
+    ratesHTML = '<div class="hint">У ваших журналах лише базова валюта — курси не потрібні.</div>';
+  } else {
+    for (const c of otherCurrencies) {
+      const val = d.rates[c] != null ? String(d.rates[c]) : '';
+      ratesHTML += '<div class="rate-row">' +
+        '<span class="rate-prefix">1\u00a0' + escapeHtml(base) + '\u00a0=</span>' +
+        '<input type="text" inputmode="decimal" data-rate-curr="' + escapeHtml(c) + '" value="' + escapeHtml(val) + '" placeholder="—">' +
+        '<span class="rate-suffix">' + escapeHtml(c) + '</span>' +
+      '</div>';
+    }
+  }
+
+  return (
+    '<header class="hdr">' +
+      '<button class="hdr-btn" data-action="cancel-settings" aria-label="скасувати">✕</button>' +
+      '<div class="hdr-title">' +
+        '<div class="hdr-title-main">Налаштування</div>' +
+      '</div>' +
+      '<button class="hdr-btn sym" data-action="save-settings" aria-label="зберегти">✓</button>' +
+    '</header>' +
+    '<main><div class="form">' +
+      '<div class="form-group">' +
+        '<label class="form-label">Основна валюта</label>' +
+        baseHTML +
+        '<div class="hint">У ній показуватимуться загальні підсумки.</div>' +
+      '</div>' +
+      '<div class="form-group">' +
+        '<label class="form-label">Курси</label>' +
+        ratesHTML +
+      '</div>' +
+    '</div><div class="bottom-pad"></div></main>'
+  );
+}
+document.addEventListener('click', function (e) {
+  const target = e.target.closest('[data-action]');
+  if (!target) return;
+  const action = target.dataset.action;
+
+  // Завжди читаємо поточні значення інпутів у чернетку перед перемиканням
+  syncInputsToDraft();
+
+  switch (action) {
+    case 'toggle-theme': toggleTheme(); break;
+
+    case 'open-stats':
+      vibrate(8);
+      setView('stats', { freshScroll: true });
+      break;
+
+    case 'pick-stats-curr':
+      state.statsCurrency = target.dataset.curr;
+      vibrate(6);
+      render();
+      break;
+
+    case 'open-journal-from-stats':
+      vibrate(8);
+      setView('journal', { activeJournalId: target.dataset.id, freshScroll: true });
+      break;
+
+    case 'open-settings':
+      state.draft = null;
+      vibrate(8);
+      setView('settings');
+      break;
+
+    case 'cancel-settings':
+      state.draft = null;
+      vibrate(8);
+      setView('stats');
+      break;
+
+    case 'save-settings':
+      handleSaveSettings();
+      break;
+
+    case 'pick-base-currency':
+      if (state.draft) {
+        state.draft.baseCurrency = target.dataset.curr;
+        vibrate(6);
+        render();
+      }
+      break;
+
+    case 'new-journal':
+      state.draft = null;
+      state.editingJournalId = null;
+      vibrate(8);
+      setView('journalForm');
+      break;
+
+    case 'open-journal':
+      vibrate(8);
+      setView('journal', { activeJournalId: target.dataset.id, freshScroll: true });
+      break;
+
+    case 'back-list':
+      vibrate(8);
+      setView('list');
+      break;
+
+    case 'edit-journal':
+      state.draft = null;
+      state.editingJournalId = state.activeJournalId;
+      vibrate(8);
+      setView('journalForm');
+      break;
+
+    case 'cancel-journal-form':
+      state.draft = null;
+      state.editingJournalId = null;
+      vibrate(8);
+      if (state.activeJournalId && getJournal(state.activeJournalId)) {
+        setView('journal');
+      } else {
+        setView('list');
+      }
+      break;
+
+    case 'save-journal':
+      handleSaveJournal();
+      break;
+
+    case 'pick-currency':
+      state.draft.currency = target.dataset.currency;
+      vibrate(6);
+      render();
+      break;
+
+    case 'pick-kind':
+      state.draft.kind = target.dataset.kind;
+      vibrate(6);
+      render();
+      break;
+
+    case 'start-custom-currency':
+      state.enteringCustomCurrency = true;
+      vibrate(6);
+      render();
+      setTimeout(() => {
+        const inp = document.getElementById('custom-currency-input');
+        if (inp) inp.focus();
+      }, 50);
+      break;
+
+    case 'confirm-custom-currency':
+      const ccInp = document.getElementById('custom-currency-input');
+      const ccVal = ccInp ? ccInp.value.trim().slice(0, 4) : '';
+      if (ccVal && state.draft) state.draft.currency = ccVal;
+      state.enteringCustomCurrency = false;
+      vibrate(8);
+      render();
+      break;
+
+    case 'cancel-custom-currency':
+      state.enteringCustomCurrency = false;
+      vibrate(6);
+      render();
+      break;
+
+    case 'toggle-archive-journal':
+      archiveJournal(state.editingJournalId);
+      state.draft = null;
+      state.editingJournalId = null;
+      vibrate(12);
+      setView('list');
+      break;
+
+    case 'delete-journal':
+      arm('del-journal', () => {
+        const id = state.editingJournalId;
+        state.draft = null;
+        state.editingJournalId = null;
+        state.activeJournalId = null;
+        deleteJournal(id);
+        vibrate(20);
+        setView('list');
+      });
+      vibrate(8);
+      break;
+
+    case 'export-csv':
+      const j2 = getJournal(state.editingJournalId);
+      if (j2) {
+        exportCSV(j2);
+        vibrate(12);
+      }
+      break;
+
+    case 'new-tx':
+      state.draft = null;
+      state.editingTransactionId = null;
+      vibrate(8);
+      setView('transactionForm', { freshScroll: true });
+      break;
+
+    case 'add-tx-in-category':
+      // Звичайний тап — нова транзакція з цією категорією
+      state.draft = {
+        amount: '',
+        type: 'expense',
+        categoryId: target.dataset.id,
+        date: todayDate(),
+        note: ''
+      };
+      state.editingTransactionId = null;
+      vibrate(8);
+      setView('transactionForm', { freshScroll: true });
+      setTimeout(() => {
+        const inp = document.querySelector('[data-field="amount"]');
+        if (inp) inp.focus();
+      }, 60);
+      break;
+
+    case 'enter-cat-edit':
+      state.editingCats = true;
+      state.armedCategoryId = null;
+      if (state.armedCategoryTimer) { clearTimeout(state.armedCategoryTimer); state.armedCategoryTimer = null; }
+      vibrate(8);
+      render();
+      break;
+
+    case 'exit-cat-edit':
+      state.editingCats = false;
+      state.armedCategoryId = null;
+      if (state.armedCategoryTimer) { clearTimeout(state.armedCategoryTimer); state.armedCategoryTimer = null; }
+      vibrate(8);
+      render();
+      break;
+
+    case 'delete-cat-in-edit':
+      const catIdToDel = target.dataset.id;
+      if (state.armedCategoryId === catIdToDel) {
+        // Підтвердження — видаляємо
+        if (state.armedCategoryTimer) { clearTimeout(state.armedCategoryTimer); state.armedCategoryTimer = null; }
+        deleteCategory(state.activeJournalId, catIdToDel);
+        state.armedCategoryId = null;
+        vibrate(20);
+        // Якщо більше категорій не лишилось — виходимо з режиму редагування
+        const remain = getJournal(state.activeJournalId);
+        if (remain && (remain.categories || []).length === 0) {
+          state.editingCats = false;
+        }
+        render();
+      } else {
+        // Зняти попередній взвід
+        if (state.armedCategoryTimer) { clearTimeout(state.armedCategoryTimer); state.armedCategoryTimer = null; }
+        state.armedCategoryId = catIdToDel;
+        state.armedCategoryTimer = setTimeout(() => {
+          state.armedCategoryId = null;
+          state.armedCategoryTimer = null;
+          render();
+        }, 3000);
+        vibrate(10);
+        render();
+      }
+      break;
+
+    case 'start-new-category-row':
+      state.creatingCategoryInJournal = true;
+      vibrate(8);
+      render();
+      setTimeout(() => {
+        const inp = document.getElementById('new-cat-row-input');
+        if (inp) inp.focus();
+      }, 50);
+      break;
+
+    case 'confirm-new-category-row':
+      const newCatInp = document.getElementById('new-cat-row-input');
+      const newCatName = newCatInp ? newCatInp.value.trim() : '';
+      if (newCatName) {
+        addCategory(state.activeJournalId, newCatName);
+        vibrate(12);
+      }
+      state.creatingCategoryInJournal = false;
+      render();
+      break;
+
+    case 'cancel-new-category-row':
+      state.creatingCategoryInJournal = false;
+      vibrate(6);
+      render();
+      break;
+
+    case 'edit-tx':
+      state.draft = null;
+      state.editingTransactionId = target.dataset.id;
+      vibrate(8);
+      setView('transactionForm', { freshScroll: true });
+      break;
+
+    case 'cancel-tx-form':
+      state.draft = null;
+      state.editingTransactionId = null;
+      vibrate(8);
+      setView('journal');
+      break;
+
+    case 'save-transaction':
+      handleSaveTransaction();
+      break;
+
+    case 'pick-type':
+      state.draft.type = target.dataset.type;
+      vibrate(6);
+      render();
+      break;
+
+    case 'delete-transaction':
+      arm('del-tx', () => {
+        deleteTransaction(state.activeJournalId, state.editingTransactionId);
+        state.draft = null;
+        state.editingTransactionId = null;
+        vibrate(20);
+        setView('journal');
+      });
+      vibrate(8);
+      break;
+
+    case 'toggle-archive':
+      state.archiveOpen = !state.archiveOpen;
+      render();
+      break;
+  }
+});
+
+// Збереження значень інпутів у чернетку при кожній зміні
+document.addEventListener('input', function (e) {
+  const el = e.target;
+  const field = el.dataset && el.dataset.field;
+  if (!field || !state.draft) return;
+  state.draft[field] = el.value;
+});
+
+document.addEventListener('change', function (e) {
+  const el = e.target;
+  const field = el.dataset && el.dataset.field;
+  if (!field || !state.draft) return;
+  state.draft[field] = el.value;
+});
+
+function syncInputsToDraft() {
+  if (!state.draft) return;
+  document.querySelectorAll('[data-field]').forEach(el => {
+    const f = el.dataset.field;
+    if (f && state.draft) state.draft[f] = el.value;
+  });
+}
+
+// Enter на полі нової категорії = підтвердити
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter') return;
+  if (e.target.id === 'new-cat-row-input') {
+    e.preventDefault();
+    const name = e.target.value.trim();
+    if (name) {
+      addCategory(state.activeJournalId, name);
+      vibrate(12);
+    }
+    state.creatingCategoryInJournal = false;
+    render();
+  }
+  if (e.target.id === 'custom-currency-input') {
+    e.preventDefault();
+    const val = e.target.value.trim().slice(0, 4);
+    if (val && state.draft) {
+      state.draft.currency = val;
+    }
+    state.enteringCustomCurrency = false;
+    render();
+  }
+});
+
+/* ============================================================
+   ЛОГІКА ЗБЕРЕЖЕННЯ
+   ============================================================ */
+function parseAmount(s) {
+  if (!s) return NaN;
+  const cleaned = String(s).replace(/\s/g, '').replace(',', '.');
+  const n = parseFloat(cleaned);
+  return n;
+}
+
+function handleSaveJournal() {
+  syncInputsToDraft();
+  const d = state.draft;
+  if (!d) return;
+  const name = (d.name || '').trim();
+  if (!name) {
+    const err = document.getElementById('err-name');
+    if (err) err.classList.add('show');
+    vibrate([10, 50, 10]);
+    return;
+  }
+
+  // Валідація бюджету
+  let budget = null;
+  if (d.budget && String(d.budget).trim() !== '') {
+    const b = parseAmount(d.budget);
+    if (!isNaN(b) && b > 0) budget = b;
+  }
+
+  // Валідація дат
+  let startDate = d.startDate || todayDate();
+  let endDate = d.endDate || null;
+  if (endDate && startDate && endDate < startDate) {
+    endDate = startDate;
+  }
+
+  const data = {
+    kind: d.kind === 'savings' ? 'savings' : 'expenses',
+    name,
+    currency: d.currency || '€',
+    startDate,
+    endDate,
+    budget
+  };
+
+  vibrate(15);
+  if (state.editingJournalId) {
+    updateJournal(state.editingJournalId, data);
+    state.draft = null;
+    const wasActive = state.activeJournalId === state.editingJournalId;
+    state.editingJournalId = null;
+    setView(wasActive ? 'journal' : 'list');
+  } else {
+    const j = createJournal(data);
+    state.draft = null;
+    state.activeJournalId = j.id;
+    setView('journal', { freshScroll: true });
+  }
+}
+
+function handleSaveTransaction() {
+  syncInputsToDraft();
+  const d = state.draft;
+  if (!d) return;
+  const amount = parseAmount(d.amount);
+  if (isNaN(amount) || amount <= 0) {
+    const err = document.getElementById('err-amount');
+    if (err) err.classList.add('show');
+    vibrate([10, 50, 10]);
+    return;
+  }
+  const data = {
+    amount,
+    type: d.type || 'expense',
+    categoryId: d.categoryId || null,
+    date: d.date || todayDate(),
+    note: d.note || ''
+  };
+  vibrate(15);
+  if (state.editingTransactionId) {
+    updateTransaction(state.activeJournalId, state.editingTransactionId, data);
+  } else {
+    addTransaction(state.activeJournalId, data);
+  }
+  state.draft = null;
+  state.editingTransactionId = null;
+  setView('journal');
+}
+
+function handleSaveSettings() {
+  // Зібрати курси з input-полів
+  if (state.draft) {
+    document.querySelectorAll('[data-rate-curr]').forEach(el => {
+      const c = el.dataset.rateCurr;
+      const v = parseAmount(el.value);
+      if (!isNaN(v) && v > 0) {
+        state.draft.rates[c] = v;
+      } else {
+        delete state.draft.rates[c];
+      }
+    });
+    state.settings.baseCurrency = state.draft.baseCurrency;
+    state.settings.rates = state.draft.rates;
+    saveState();
+  }
+  state.draft = null;
+  vibrate(15);
+  setView('stats');
+}
+
+/* ============================================================
+   СТАРТ
+   ============================================================ */
+loadState();
+render();
+
+// Запобігти масштабуванню подвійним тапом на iOS
+let lastTouch = 0;
+document.addEventListener('touchend', function (e) {
+  const now = Date.now();
+  if (now - lastTouch < 300) e.preventDefault();
+  lastTouch = now;
+}, { passive: false });
+
+// Прокрутити фокусоване поле у видиму область над клавіатурою
+document.addEventListener('focusin', function (e) {
+  const el = e.target;
+  if (!el || !el.matches) return;
+  if (!el.matches('input, textarea, [contenteditable]')) return;
+  // Затримка щоб клавіатура встигла відкритися
+  setTimeout(function () {
+    if (document.activeElement === el) {
+      try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+    }
+  }, 320);
+});
+
+// visualViewport: додатковий padding знизу під клавіатуру,
+// щоб контент можна було повністю прокрутити
+if (window.visualViewport) {
+  const updateVV = function () {
+    const vv = window.visualViewport;
+    const offset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    document.documentElement.style.setProperty('--kb-offset', offset + 'px');
+  };
+  window.visualViewport.addEventListener('resize', updateVV);
+  window.visualViewport.addEventListener('scroll', updateVV);
+  updateVV();
+}
+
+// Реєстрація Service Worker для офлайн і встановлення на головний екран
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function (err) {
+      console.warn('SW registration failed:', err);
+    });
+  });
+}
+
+</script>
+</body>
+</html>
